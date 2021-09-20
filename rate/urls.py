@@ -6,7 +6,8 @@ from django.conf import settings
 
 urlpatterns = [
     path("", views.index, name="index"),
-     path('post/<int:id>', views.project_details, name = "project_details"),
+    path("post/<int:id>", views.project_details, name="project_details"),
+    path("post/project", views.post_project, name="post_project"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -43,3 +43,18 @@ def project_details(request,id):
         voted = True 
     
     return render(request, 'project_details.html', {"project":project, "voted": voted})
+
+def project_search(request):
+    '''
+    Display search results
+    '''
+    if "project" in request.GET and request.GET["project"]:
+        searched_project = request.GET.get("project")
+        projects = Project.search_project(searched_project)
+        message =f"{searched_project}"
+       
+        
+        return render(request, 'search.html', {"projects": projects,"message": message})
+    else:
+        message = "You haven't searched for any term"
+        return render(request,'search.html', {"message": message}) 
