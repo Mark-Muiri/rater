@@ -1,20 +1,26 @@
 from django.shortcuts import render,redirect
+from django.contrib.auth.decorators import login_required
 from .models import Project,Profile
+
 from django.urls import reverse
+from django.http import HttpResponseRedirect
+
+
+from django.contrib.auth.models import User
+import statistics
 
 def index(request):
     '''
     Displays landing page 
     '''
-    title = "RATER"
+    title = "IPDb"
     projects = Project.display_all_projects()
     projects_scores = Project.objects.all().order_by('-average_score')
-    # highest_score = projects_scores[0]
+    highest_score = projects_scores[0]
 
-    return render(request,"index.html",{"title": title, "projects": projects,})
+    return render(request,"index.html",{"title": title, "projects": projects,"highest":highest_score})
 
-
-
+@login_required(login_url="/accounts/login/")
 def post_project(request):
     '''
     Enables a User to post a project
@@ -31,7 +37,6 @@ def post_project(request):
         form = AddProjectForm()
 
     return render(request, 'post_project.html', {"form": form})
-
 
 def project_details(request,id):
     '''
@@ -96,7 +101,6 @@ def edit_profile(request):
         form = EditProfileForm()
     return render(request, 'edit_profile.html', {"form": form})
 
-
 def add_voters(request,id):
     '''
     Adds voters
@@ -138,4 +142,5 @@ def rate_project(request,id):
     else:
         form = RateForm()
     return render(request, 'rate_project.html', {"project":project, "form": form})
+
 
