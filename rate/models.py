@@ -52,3 +52,27 @@ class Project(models.Model):
     @classmethod
     def get_user_projects(cls,profile):
         return cls.objects.filter(profile=profile)
+
+
+
+class Profile(models.Model):
+    '''
+    Class that defines the profile objects
+    '''
+    user = models.OneToOneField(User, on_delete = models.CASCADE)
+    bio = models.TextField()
+    picture = CloudinaryField('image')
+    email = models.EmailField()
+    github_link = models.URLField()
+
+    def __str__(self):
+        return self.user.username 
+
+@receiver(post_save, sender = User)
+def create_profile(sender, instance,created, **kwargs):
+     if created:
+        Profile.objects.create(user = instance)
+
+@receiver(post_save,sender = User)
+def save_profile( sender, instance, **kwargs):
+    instance.profile.save()

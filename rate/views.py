@@ -1,50 +1,45 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from .models import Project,Profile
+from django.urls import reverse
 
-# Create your views here.
-class Project(models.Model):
+def index(request):
     '''
-    Class that defines the project objects
+    Displays landing page 
     '''
-    title = models.CharField(max_length = 30)
-    image = CloudinaryField('image')
-    description = models.TextField()
-    link = models.URLField()
-    profile = models.ForeignKey(User, on_delete=models.CASCADE)
-    pubdate = models.DateTimeField(auto_now_add=True, null = True)
-    voters = models.ManyToManyField(User, related_name="votes")
-    design_score = models.IntegerField(default=0)
-    usability_score = models.IntegerField(default=0)
-    content_score = models.IntegerField(default=0)
-    average_design = models.FloatField(default=0,)
-    average_usability = models.FloatField(default=0)
-    average_content = models.FloatField(default=0)
-    average_score = models.FloatField(default=0)
+    title = "RATER"
+    projects = Project.display_all_projects()
+    projects_scores = Project.objects.all().order_by('-average_score')
+    # highest_score = projects_scores[0]
 
-
-    def __str__(self):
-        return self.title
-
-
-    def save_project(self):
-        self.save()
-
-    def delete_project(self):
-        self.delete()
-
-    def voters_count(self):
-        return self.voters.count()
+    return render(request,"index.html",{"title": title, "projects": projects,})
 
 
 
+def post_project(request):
+    '''
+    Enables a User to post a project
+    '''
+    if request.method == "POST":
+        form = AddProjectForm(request.POST, request.FILES)
+        if form.is_valid():
+            project = form.save(commit= False)
+            project.profile = request.user
+            project.save()
 
-    @classmethod
-    def display_all_projects(cls):
-        return cls.objects.all()
+        return redirect("index")
+    else:
+        form = AddProjectForm()
 
-    @classmethod 
-    def search_project(cls,name):
-        return Project.objects.filter(title__icontains = name)
+    return render(request, 'post_project.html', {"form": form})
 
-    @classmethod
-    def get_user_projects(cls,profile):
-        return cls.objects.filter(profile=profile)
+
+def project_details(request,id):
+    '''
+    Show project details
+    '''
+    project = Project.objects.get(pk = id)
+    voted = False
+    if project.voters.filter(id=request.user.id).exists():
+        voted = True 
+    
+    return render(request, 'project_details.html', {"project":project, "voted": voted})
