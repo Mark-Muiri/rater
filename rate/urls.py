@@ -11,6 +11,7 @@ urlpatterns = [
     path('search/', views.project_search, name = "project_search"),
     path('profile/',views.profile, name = "profile"),
     path('project/rate/<int:id>', views.rate_project, name ="rate_project"),
+    path('project/votes/<int:id>', views.add_voters, name ="add_voters"),
     
 ]
 if settings.DEBUG:
