@@ -14,7 +14,7 @@ def index(request):
     '''
     Displays landing page 
     '''
-    title = "IPDb"
+    title = "RATER"
     projects = Project.display_all_projects()
     projects_scores = Project.objects.all().order_by('-average_score')
     highest_score = projects_scores[0]
