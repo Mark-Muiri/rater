@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'rate',
     'cloudinary',
     'bootstrap4',
+    'rest_framework',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
