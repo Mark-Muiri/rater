@@ -12,6 +12,7 @@ urlpatterns = [
     path('profile/',views.profile, name = "profile"),
     path('project/rate/<int:id>', views.rate_project, name ="rate_project"),
     path('project/votes/<int:id>', views.add_voters, name ="add_voters"),
+    path('profile/edit/', views.edit_profile,name= 'edit_profile'),
     
 ]
 if settings.DEBUG:
