@@ -95,3 +95,17 @@ def edit_profile(request):
     else:
         form = EditProfileForm()
     return render(request, 'edit_profile.html', {"form": form})
+
+
+def add_voters(request,id):
+    '''
+    Adds voters
+    '''
+    project = Project.objects.get(pk=id)
+    voted = False
+    if project.voters.filter(id=request.user.id).exists():
+        voted = False
+    else:
+        project.voters.add(request.user)
+        voted = False
+    return HttpResponseRedirect(reverse('rate_project',args =[int(project.id)]))
