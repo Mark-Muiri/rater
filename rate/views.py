@@ -109,3 +109,33 @@ def add_voters(request,id):
         project.voters.add(request.user)
         voted = False
     return HttpResponseRedirect(reverse('rate_project',args =[int(project.id)]))
+
+def rate_project(request,id):
+    '''
+    Rates the projects
+    '''
+    project = Project.objects.get(pk = id)
+    if request.method == "POST":
+        form = RateForm(request.POST)
+        if form.is_valid():
+            design = form.cleaned_data['design']
+            usability = form.cleaned_data['usability']
+            content = form.cleaned_data['content']
+
+            project.design_score = project.design_score + design
+            project.usability_score = project.usability_score + usability
+            project.content_score = project.content_score + content
+
+            project.average_design = project.design_score/project.voters_count()
+            project.average_usability = project.usability_score/project.voters_count()
+            project.average_content = project.content_score/project.voters_count()
+
+            project.average_score = (project.average_design + project.average_usability + project.average_content)/3
+
+            project.save()
+            return HttpResponseRedirect(reverse('project_details',args =[int(project.id)]))
+
+    else:
+        form = RateForm()
+    return render(request, 'rate_project.html', {"project":project, "form": form})
+
