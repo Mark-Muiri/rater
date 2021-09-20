@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Project,Profile
+from .forms import AddProjectForm, RateForm,EditProfileForm
 
 from django.urls import reverse
 from django.http import HttpResponseRedirect
