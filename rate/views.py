@@ -58,3 +58,14 @@ def project_search(request):
     else:
         message = "You haven't searched for any term"
         return render(request,'search.html', {"message": message}) 
+
+def profile(request):
+    '''
+    Displays User's profile page
+    '''
+    title = 'Profile'
+    current_user = request.user
+    profile = Profile.objects.get(user =current_user)
+    projects = Project.get_user_projects(current_user)
+
+    return render(request, 'profile.html', {'profile':profile,"projects": projects})
