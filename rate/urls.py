@@ -15,7 +15,7 @@ urlpatterns = [
     path('profile/edit/', views.edit_profile,name= 'edit_profile'),
     path('api/projects/', views.ProjectList.as_view()),
     path('api/profiles/', views.ProfileList.as_view()), 
-    path('login')
+    p
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
